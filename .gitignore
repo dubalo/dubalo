@@ -1,0 +1,5 @@
+node_modules/
+symptoms.db
+*.log
+.env
+.DS_Store

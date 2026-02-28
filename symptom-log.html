@@ -478,47 +478,69 @@
             };
 
             try {
-                saveStatus.textContent = 'Saving to symptoms.db...';
+                saveStatus.textContent = 'Sending record to Formspree...';
 
-                const response = await fetch('/api/symptoms', {
+                // 1. Send to Formspree
+                const formspreeResponse = await fetch('https://formspree.io/f/mnjbrwzg', {
                     method: 'POST',
                     headers: {
+                        'Accept': 'application/json',
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(payload)
                 });
 
-                const result = await response.json();
-                if (!response.ok) {
-                    throw new Error(result.error || 'Failed to save record.');
+                if (!formspreeResponse.ok) {
+                    throw new Error('Formspree submission failed.');
                 }
 
-                saveStatus.textContent = 'Saved to symptoms.db and graph updated.';
-                renderChart([...latestRecords, payload]);
-                await loadChartData();
+                // 2. Save locally to localStorage (for the graph)
+                const localData = JSON.parse(localStorage.getItem('symptomRecords') || '[]');
+                localData.push(payload);
+                localStorage.setItem('symptomRecords', JSON.stringify(localData));
+
+                // 3. Optional: Try saving to local API if server is running
+                try {
+                    await fetch('/api/symptoms', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                } catch (e) {
+                    console.log('Local server not available, data saved to localStorage only.');
+                }
+
+                saveStatus.textContent = 'Successfully sent to Formspree and saved locally!';
+                renderChart(localData);
                 resetFormToDefault();
             } catch (error) {
-                saveStatus.textContent = `Save failed: ${error.message}`;
+                saveStatus.textContent = `Error: ${error.message}`;
             }
         }
 
         async function loadChartData() {
             try {
-                const response = await fetch('/api/symptoms');
-                const records = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(records.error || 'Failed to load records.');
+                // Try fetching from local API first
+                let records = [];
+                try {
+                    const response = await fetch('/api/symptoms');
+                    if (response.ok) {
+                        records = await response.json();
+                    }
+                } catch (e) {
+                    console.log('Local server not available, using localStorage.');
                 }
 
-                renderChart(Array.isArray(records) ? records : []);
+                // Merge with localStorage data and deduplicate by date (simplified)
+                const localData = JSON.parse(localStorage.getItem('symptomRecords') || '[]');
+                const combined = [...records, ...localData];
+                
+                // Deduplicate by recordDate
+                const unique = Array.from(new Map(combined.map(item => [item.recordDate, item])).values());
+
+                renderChart(unique);
             } catch (error) {
                 emptyChart.textContent = `Graph load failed: ${error.message}`;
-                if (!latestRecords.length) {
-                    chartContainer.innerHTML = '';
-                    tableBody.innerHTML = '';
-                    tableWrap.style.display = 'none';
-                }
             }
         }
 
