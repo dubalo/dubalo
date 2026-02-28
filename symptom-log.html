@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symptom Log</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 24px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            color: #2c3e50;
+            margin-bottom: 16px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .date-row {
+            margin-bottom: 18px;
+        }
+
+        .symptom-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .symptom-item {
+            border: 1px solid #e1e1e1;
+            border-radius: 8px;
+            padding: 12px;
+            background-color: #fafafa;
+        }
+
+        .symptom-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .score {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 0.95rem;
+        }
+
+        label {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        input,
+        textarea {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        input[type="range"] {
+            padding: 0;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        button,
+        .link-button {
+            border: none;
+            border-radius: 8px;
+            padding: 10px 16px;
+            cursor: pointer;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .link-button {
+            background-color: #95a5a6;
+            color: white;
+        }
+
+        .hint {
+            font-size: 0.95rem;
+            color: #555;
+            margin-top: 12px;
+            line-height: 1.6;
+        }
+
+        .status {
+            margin-top: 10px;
+            font-size: 0.95rem;
+            color: #2c3e50;
+            min-height: 1.2em;
+        }
+
+        .chart-wrap {
+            position: relative;
+            width: 100%;
+            min-height: 280px;
+            border: 1px solid #e1e1e1;
+            border-radius: 8px;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .empty-chart {
+            font-size: 0.95rem;
+            color: #666;
+        }
+
+        .chart-legend {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        .legend-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .chart-table {
+            margin-top: 16px;
+            border: 1px solid #e1e1e1;
+            border-radius: 8px;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .chart-table table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        .chart-table th,
+        .chart-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #eef1f4;
+            text-align: center;
+        }
+
+        .chart-table th {
+            background: #f6f7f9;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .chart-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>📝 Symptom Log</h1>
+        <p>Record key Parkinsonian symptoms during each check-in</p>
+    </header>
+
+    <div class="container">
+        <form class="card" onsubmit="handleSubmit(event)">
+            <h2>Daily Symptom Record</h2>
+
+            <div class="field date-row">
+                <label for="recordDate">Date</label>
+                <input id="recordDate" name="recordDate" type="date" required>
+            </div>
+
+            <div class="symptom-list">
+                <div class="symptom-item">
+                    <div class="symptom-header">
+                        <label for="tremor">Tremor</label>
+                        <span class="score" id="tremorValue">5 / 10</span>
+                    </div>
+                    <input id="tremor" name="tremor" type="range" min="0" max="10" value="5" required>
+                </div>
+
+                <div class="symptom-item">
+                    <div class="symptom-header">
+                        <label for="rigidity">Rigidity</label>
+                        <span class="score" id="rigidityValue">5 / 10</span>
+                    </div>
+                    <input id="rigidity" name="rigidity" type="range" min="0" max="10" value="5" required>
+                </div>
+
+                <div class="symptom-item">
+                    <div class="symptom-header">
+                        <label for="bradykinesia">Bradykinesia</label>
+                        <span class="score" id="bradykinesiaValue">5 / 10</span>
+                    </div>
+                    <input id="bradykinesia" name="bradykinesia" type="range" min="0" max="10" value="5" required>
+                </div>
+
+                <div class="symptom-item">
+                    <div class="symptom-header">
+                        <label for="instability">Instability</label>
+                        <span class="score" id="instabilityValue">5 / 10</span>
+                    </div>
+                    <input id="instability" name="instability" type="range" min="0" max="10" value="5" required>
+                </div>
+            </div>
+
+            <div class="field" style="margin-top: 16px;">
+                <label for="notes">Notes</label>
+                <textarea id="notes" name="notes" placeholder="Add observations, medication timing, or behavior changes"></textarea>
+            </div>
+
+            <div class="actions">
+                <button type="submit">Save Record</button>
+                <a class="link-button" href="index.html">Back to Main</a>
+            </div>
+
+            <p class="hint">Save a date with T/R/B/I scores to draw and update the graph below.</p>
+            <p class="status" id="saveStatus"></p>
+        </form>
+
+        <section class="card">
+            <h2>Symptom Trend Graph</h2>
+            <p class="hint" style="margin-top: 0; margin-bottom: 12px;">This chart displays saved symptom scores by date.</p>
+            <div class="chart-wrap" id="symptomChart"></div>
+            <div class="chart-legend" aria-label="Graph legend">
+                <span class="legend-item"><span class="legend-dot" style="background:#1f77b4;"></span>T (Tremor)</span>
+                <span class="legend-item"><span class="legend-dot" style="background:#ff7f0e;"></span>R (Rigidity)</span>
+                <span class="legend-item"><span class="legend-dot" style="background:#2ca02c;"></span>B (Bradykinesia)</span>
+                <span class="legend-item"><span class="legend-dot" style="background:#d62728;"></span>I (Instability)</span>
+            </div>
+            <div class="chart-table" id="symptomTableWrap" aria-label="Symptom scores by date">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>T</th>
+                            <th>R</th>
+                            <th>B</th>
+                            <th>I</th>
+                        </tr>
+                    </thead>
+                    <tbody id="symptomTableBody"></tbody>
+                </table>
+            </div>
+            <p class="empty-chart" id="emptyChart"></p>
+        </section>
+    </div>
+
+    <script>
+        document.getElementById('recordDate').valueAsDate = new Date();
+        const form = document.querySelector('form');
+        const saveStatus = document.getElementById('saveStatus');
+        const emptyChart = document.getElementById('emptyChart');
+        const chartContainer = document.getElementById('symptomChart');
+        const tableWrap = document.getElementById('symptomTableWrap');
+        const tableBody = document.getElementById('symptomTableBody');
+        let latestRecords = [];
+
+        const symptoms = ['tremor', 'rigidity', 'bradykinesia', 'instability'];
+
+        symptoms.forEach((symptom) => {
+            const slider = document.getElementById(symptom);
+            const valueTag = document.getElementById(`${symptom}Value`);
+            slider.addEventListener('input', () => {
+                valueTag.textContent = `${slider.value} / 10`;
+            });
+        });
+
+        function escapeHtml(value) {
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function renderSvgGraph(records) {
+            const width = Math.max(chartContainer.clientWidth || 760, 320);
+            const height = 320;
+            const margin = { top: 16, right: 16, bottom: 56, left: 42 };
+            const plotWidth = width - margin.left - margin.right;
+            const plotHeight = height - margin.top - margin.bottom;
+
+            const xAt = (index) => {
+                if (records.length === 1) {
+                    return margin.left + plotWidth / 2;
+                }
+                return margin.left + (index / (records.length - 1)) * plotWidth;
+            };
+
+            const yAt = (score) => {
+                const normalized = score / 10;
+                return margin.top + (1 - normalized) * plotHeight;
+            };
+
+            const yGuides = [0, 2, 4, 6, 8, 10];
+            const guideLines = yGuides.map((score) => {
+                const y = yAt(score).toFixed(2);
+                return `
+                    <line x1="${margin.left}" y1="${y}" x2="${(width - margin.right)}" y2="${y}" stroke="#eef1f4" stroke-width="1" />
+                    <text x="${margin.left - 8}" y="${Number(y) + 4}" font-size="11" text-anchor="end" fill="#667085">${score}</text>
+                `;
+            }).join('');
+
+            const xTicks = records.map((record, index) => {
+                const x = xAt(index).toFixed(2);
+                const label = escapeHtml(record.recordDate.slice(5));
+                return `<text x="${x}" y="${height - 20}" font-size="11" text-anchor="middle" fill="#667085">${label}</text>`;
+            }).join('');
+
+            const series = [
+                { key: 'tremor', color: '#1f77b4' },
+                { key: 'rigidity', color: '#ff7f0e' },
+                { key: 'bradykinesia', color: '#2ca02c' },
+                { key: 'instability', color: '#d62728' }
+            ];
+
+            const lines = series.map((item) => {
+                const points = records
+                    .map((record, index) => `${xAt(index).toFixed(2)},${yAt(Number(record[item.key])).toFixed(2)}`)
+                    .join(' ');
+
+                const markers = records.map((record, index) => {
+                    const x = xAt(index).toFixed(2);
+                    const y = yAt(Number(record[item.key])).toFixed(2);
+                    return `<circle cx="${x}" cy="${y}" r="3" fill="${item.color}" />`;
+                }).join('');
+
+                return `<polyline fill="none" stroke="${item.color}" stroke-width="2.5" points="${points}" />${markers}`;
+            }).join('');
+
+            chartContainer.innerHTML = `
+                <svg width="100%" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-label="Symptom trend graph">
+                    <rect x="0" y="0" width="${width}" height="${height}" fill="#ffffff"></rect>
+                    ${guideLines}
+                    <line x1="${margin.left}" y1="${margin.top}" x2="${margin.left}" y2="${height - margin.bottom}" stroke="#98a2b3" stroke-width="1.2" />
+                    <line x1="${margin.left}" y1="${height - margin.bottom}" x2="${width - margin.right}" y2="${height - margin.bottom}" stroke="#98a2b3" stroke-width="1.2" />
+                    ${lines}
+                    ${xTicks}
+                    <text x="${width / 2}" y="${height - 4}" text-anchor="middle" font-size="12" fill="#475467">Date</text>
+                    <text x="14" y="${height / 2}" text-anchor="middle" font-size="12" fill="#475467" transform="rotate(-90 14 ${height / 2})">Score (0-10)</text>
+                </svg>
+            `;
+        }
+
+        function normalizeRecord(record) {
+            const pickNumber = (keys, fallback = 0) => {
+                for (const key of keys) {
+                    if (record[key] !== undefined && record[key] !== null && record[key] !== '') {
+                        return Number(record[key]);
+                    }
+                }
+                return fallback;
+            };
+
+            return {
+                recordDate: record.recordDate || record.date || record.record_date || '',
+                tremor: pickNumber(['tremor', 't']),
+                rigidity: pickNumber(['rigidity', 'r']),
+                bradykinesia: pickNumber(['bradykinesia', 'b']),
+                instability: pickNumber(['instability', 'i']),
+                notes: record.notes || ''
+            };
+        }
+
+        function renderChart(records) {
+            const normalized = records.map(normalizeRecord).filter((record) => record.recordDate);
+            const sorted = normalized.sort((a, b) => a.recordDate.localeCompare(b.recordDate));
+            latestRecords = sorted;
+
+            if (!sorted.length) {
+                emptyChart.textContent = 'No records yet. Save a symptom entry to generate the graph.';
+                chartContainer.innerHTML = '';
+                tableBody.innerHTML = '';
+                tableWrap.style.display = 'none';
+                return;
+            }
+
+            emptyChart.textContent = '';
+            tableWrap.style.display = 'block';
+            renderSvgGraph(sorted);
+            renderTable(sorted);
+        }
+
+        function renderTable(records) {
+            tableBody.innerHTML = records.map((record) => `
+                <tr>
+                    <td>${escapeHtml(record.recordDate)}</td>
+                    <td>${Number(record.tremor)}</td>
+                    <td>${Number(record.rigidity)}</td>
+                    <td>${Number(record.bradykinesia)}</td>
+                    <td>${Number(record.instability)}</td>
+                </tr>
+            `).join('');
+        }
+
+        function resetFormToDefault() {
+            form.reset();
+            document.getElementById('recordDate').valueAsDate = new Date();
+
+            symptoms.forEach((symptom) => {
+                const slider = document.getElementById(symptom);
+                const valueTag = document.getElementById(`${symptom}Value`);
+                slider.value = 5;
+                valueTag.textContent = '5 / 10';
+            });
+        }
+
+        async function handleSubmit(event) {
+            event.preventDefault();
+
+            const payload = {
+                recordDate: document.getElementById('recordDate').value,
+                tremor: Number(document.getElementById('tremor').value),
+                rigidity: Number(document.getElementById('rigidity').value),
+                bradykinesia: Number(document.getElementById('bradykinesia').value),
+                instability: Number(document.getElementById('instability').value),
+                notes: document.getElementById('notes').value.trim()
+            };
+
+            try {
+                saveStatus.textContent = 'Saving to symptoms.db...';
+
+                const response = await fetch('/api/symptoms', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.error || 'Failed to save record.');
+                }
+
+                saveStatus.textContent = 'Saved to symptoms.db and graph updated.';
+                renderChart([...latestRecords, payload]);
+                await loadChartData();
+                resetFormToDefault();
+            } catch (error) {
+                saveStatus.textContent = `Save failed: ${error.message}`;
+            }
+        }
+
+        async function loadChartData() {
+            try {
+                const response = await fetch('/api/symptoms');
+                const records = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(records.error || 'Failed to load records.');
+                }
+
+                renderChart(Array.isArray(records) ? records : []);
+            } catch (error) {
+                emptyChart.textContent = `Graph load failed: ${error.message}`;
+                if (!latestRecords.length) {
+                    chartContainer.innerHTML = '';
+                    tableBody.innerHTML = '';
+                    tableWrap.style.display = 'none';
+                }
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            if (latestRecords.length) {
+                renderSvgGraph(latestRecords);
+            }
+        });
+
+        loadChartData();
+    </script>
+</body>
+</html>
