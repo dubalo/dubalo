@@ -7,7 +7,7 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-    
+
       gtag('config', 'G-Q8WLFJ497M');
     </script>
     <script type="text/javascript">
@@ -19,7 +19,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Symptom Log</title>
+    <title>Symptom Log - Senior Health Care</title>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3854467893999183"
      crossorigin="anonymous"></script>
     <style>
@@ -30,16 +30,43 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f5f5f5;
             color: #333;
+            line-height: 1.6;
         }
 
         header {
             background-color: #2c3e50;
             color: white;
-            padding: 24px;
+            padding: 40px 20px;
             text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.8em;
+            margin-bottom: 10px;
+        }
+
+        nav {
+            background: #34495e;
+            padding: 10px 0;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        nav a:hover {
+            color: #3498db;
         }
 
         .container {
@@ -51,14 +78,16 @@
         .card {
             background: white;
             border-radius: 10px;
-            padding: 24px;
+            padding: 30px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         .card h2 {
             color: #2c3e50;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
         }
 
         .field {
@@ -80,7 +109,7 @@
         .symptom-item {
             border: 1px solid #e1e1e1;
             border-radius: 8px;
-            padding: 12px;
+            padding: 15px;
             background-color: #fafafa;
         }
 
@@ -106,7 +135,7 @@
         textarea {
             border: 1px solid #ccc;
             border-radius: 8px;
-            padding: 10px;
+            padding: 12px;
             font-size: 1rem;
             width: 100%;
         }
@@ -123,67 +152,66 @@
         .actions {
             display: flex;
             gap: 10px;
-            margin-top: 16px;
+            margin-top: 20px;
             flex-wrap: wrap;
         }
 
-        button,
-        .link-button {
+        button {
             border: none;
             border-radius: 8px;
-            padding: 10px 16px;
+            padding: 12px 24px;
             cursor: pointer;
             font-size: 1rem;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        button {
             background-color: #3498db;
             color: white;
+            font-weight: bold;
         }
 
-        .link-button {
-            background-color: #95a5a6;
-            color: white;
+        button:hover {
+            background-color: #2980b9;
         }
 
         .hint {
             font-size: 0.95rem;
-            color: #555;
-            margin-top: 12px;
+            color: #666;
+            margin-top: 15px;
             line-height: 1.6;
         }
 
         .status {
-            margin-top: 10px;
+            margin-top: 15px;
             font-size: 0.95rem;
             color: #2c3e50;
             min-height: 1.2em;
+            font-weight: bold;
         }
 
         .chart-wrap {
             position: relative;
             width: 100%;
-            min-height: 280px;
+            min-height: 300px;
             border: 1px solid #e1e1e1;
             border-radius: 8px;
             background: #fff;
             overflow: hidden;
+            margin-top: 20px;
         }
 
         .empty-chart {
             font-size: 0.95rem;
-            color: #666;
+            color: #999;
+            text-align: center;
+            padding: 40px;
         }
 
         .chart-legend {
             display: flex;
             gap: 14px;
             flex-wrap: wrap;
-            margin-top: 12px;
+            margin-top: 15px;
             font-size: 0.9rem;
             color: #333;
+            justify-content: center;
         }
 
         .legend-item {
@@ -193,14 +221,14 @@
         }
 
         .legend-dot {
-            width: 10px;
-            height: 10px;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
             display: inline-block;
         }
 
         .chart-table {
-            margin-top: 16px;
+            margin-top: 25px;
             border: 1px solid #e1e1e1;
             border-radius: 8px;
             background: #fff;
@@ -215,7 +243,7 @@
 
         .chart-table th,
         .chart-table td {
-            padding: 10px 12px;
+            padding: 12px;
             border-bottom: 1px solid #eef1f4;
             text-align: center;
         }
@@ -226,16 +254,46 @@
             font-weight: 600;
         }
 
-        .chart-table tbody tr:last-child td {
-            border-bottom: none;
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 40px;
+        }
+
+        .footer-links {
+            margin-bottom: 20px;
+        }
+
+        .footer-links a {
+            color: #bdc3c7;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .copyright {
+            font-size: 0.9em;
+            color: #7f8c8d;
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>📝 Symptom Log</h1>
-        <p>Record key Parkinsonian symptoms during each check-in</p>
+        <h1>🏥 Senior Health Care</h1>
+        <p style="font-size: 1.2em;">Track and manage symptoms for better care outcomes</p>
     </header>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="symptom-log.html">Symptom Log</a>
+        <a href="about.html">About Us</a>
+        <a href="contact.html">Contact</a>
+    </nav>
 
     <div class="container">
         <form class="card" onsubmit="handleSubmit(event)">
@@ -249,7 +307,7 @@
             <div class="symptom-list">
                 <div class="symptom-item">
                     <div class="symptom-header">
-                        <label for="tremor">Tremor</label>
+                        <label for="tremor">Tremor (0-10)</label>
                         <span class="score" id="tremorValue">5 / 10</span>
                     </div>
                     <input id="tremor" name="tremor" type="range" min="0" max="10" value="5" required>
@@ -257,7 +315,7 @@
 
                 <div class="symptom-item">
                     <div class="symptom-header">
-                        <label for="rigidity">Rigidity</label>
+                        <label for="rigidity">Rigidity (0-10)</label>
                         <span class="score" id="rigidityValue">5 / 10</span>
                     </div>
                     <input id="rigidity" name="rigidity" type="range" min="0" max="10" value="5" required>
@@ -265,7 +323,7 @@
 
                 <div class="symptom-item">
                     <div class="symptom-header">
-                        <label for="bradykinesia">Bradykinesia</label>
+                        <label for="bradykinesia">Bradykinesia (0-10)</label>
                         <span class="score" id="bradykinesiaValue">5 / 10</span>
                     </div>
                     <input id="bradykinesia" name="bradykinesia" type="range" min="0" max="10" value="5" required>
@@ -273,30 +331,29 @@
 
                 <div class="symptom-item">
                     <div class="symptom-header">
-                        <label for="instability">Instability</label>
+                        <label for="instability">Instability (0-10)</label>
                         <span class="score" id="instabilityValue">5 / 10</span>
                     </div>
                     <input id="instability" name="instability" type="range" min="0" max="10" value="5" required>
                 </div>
             </div>
 
-            <div class="field" style="margin-top: 16px;">
-                <label for="notes">Notes</label>
+            <div class="field" style="margin-top: 20px;">
+                <label for="notes">Notes & Observations</label>
                 <textarea id="notes" name="notes" placeholder="Add observations, medication timing, or behavior changes"></textarea>
             </div>
 
             <div class="actions">
-                <button type="submit">Save Record</button>
-                <a class="link-button" href="index.html">Back to Main</a>
+                <button type="submit">Save Today's Record</button>
             </div>
 
-            <p class="hint">Save a date with T/R/B/I scores to draw and update the graph below.</p>
+            <p class="hint">Your records are saved locally and used to generate the trend graph below.</p>
             <p class="status" id="saveStatus"></p>
         </form>
 
         <section class="card">
             <h2>Symptom Trend Graph</h2>
-            <p class="hint" style="margin-top: 0; margin-bottom: 12px;">This chart displays saved symptom scores by date.</p>
+            <p class="hint" style="margin-top: 0; margin-bottom: 15px;">Visualizing symptom changes over time helps in medical consultations.</p>
             <div class="chart-wrap" id="symptomChart"></div>
             <div class="chart-legend" aria-label="Graph legend">
                 <span class="legend-item"><span class="legend-dot" style="background:#1f77b4;"></span>T (Tremor)</span>
@@ -321,6 +378,16 @@
             <p class="empty-chart" id="emptyChart"></p>
         </section>
     </div>
+
+    <footer>
+        <div class="footer-links">
+            <a href="index.html">Home</a> |
+            <a href="about.html">About Us</a> |
+            <a href="contact.html">Contact Us</a> |
+            <a href="privacy.html">Privacy Policy</a>
+        </div>
+        <p class="copyright">© 2026 Senior Health Care System | Dedicated to providing support for families in need.</p>
+    </footer>
 
     <script>
         document.getElementById('recordDate').valueAsDate = new Date();
@@ -496,21 +563,7 @@
             };
 
             try {
-                saveStatus.textContent = 'Sending record to Formspree...';
-
-                // 1. Send to Formspree
-                const formspreeResponse = await fetch('https://formspree.io/f/mnjbrwzg', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!formspreeResponse.ok) {
-                    throw new Error('Formspree submission failed.');
-                }
+                saveStatus.textContent = 'Saving record...';
 
                 // 2. Save locally to localStorage (for the graph)
                 const localData = JSON.parse(localStorage.getItem('symptomRecords') || '[]');
@@ -528,7 +581,7 @@
                     console.log('Local server not available, data saved to localStorage only.');
                 }
 
-                saveStatus.textContent = 'Successfully sent to Formspree and saved locally!';
+                saveStatus.textContent = 'Record saved successfully!';
                 renderChart(localData);
                 resetFormToDefault();
             } catch (error) {

@@ -8,7 +8,7 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-    
+
       gtag('config', 'G-Q8WLFJ497M');
     </script>
     <script type="text/javascript">
@@ -20,7 +20,8 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Senior Health Care - Main</title>
+    <meta name="description" content="Senior Health Care system providing support and symptom tracking for Parkinson’s, Alzheimer’s, and dementia patients.">
+    <title>Senior Health Care - Supporting Families and Caregivers</title>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3854467893999183"
      crossorigin="anonymous"></script>
     <style>
@@ -29,34 +30,75 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f5f5f5;
             color: #333;
+            line-height: 1.6;
         }
-        
+
         header {
             background-color: #2c3e50;
-
             color: white;
-            padding: 30px;
+            padding: 40px 20px;
             text-align: center;
         }
-        
-
 
         header h1 {
-            font-size: 2.5em;
+            font-size: 2.8em;
             margin-bottom: 10px;
         }
-        
+
+        nav {
+            background: #34495e;
+            padding: 10px 0;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        nav a:hover {
+            color: #3498db;
+        }
+
         .container {
             max-width: 1200px;
             margin: 30px auto;
             padding: 0 20px;
         }
-        
+
+        .welcome-section {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .welcome-section h2 {
+            font-size: 2em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .welcome-section p {
+            font-size: 1.2em;
+            color: #555;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
         .menu-grid {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -75,126 +117,177 @@
                 grid-template-columns: 1fr;
             }
         }
-        
+
         .menu-card {
             background: white;
-            border: 3px solid #3498db;
+            border: 1px solid #e0e0e0;
             border-radius: 10px;
             padding: 30px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            display: block;
+            text-decoration: none;
+            color: inherit;
         }
-        
+
         .menu-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 12px rgba(0,0,0,0.2);
-            background-color: #ecf0f1;
+            box-shadow: 0 8px 12px rgba(0,0,0,0.15);
+            border-color: #3498db;
         }
-        
+
         .menu-card h2 {
-            font-size: 1.8em;
-            margin-bottom: 15px;
-            color: #2c3e50;
-        }
-        
-        .menu-card p {
-            font-size: 1.1em;
-            color: #555;
-        }
-        
-        .icon {
-            font-size: 3em;
-            margin-bottom: 15px;
-        }
-        
-        footer {
-            background-color: #2c3e50;
-            color: white;
-            text-align: center;
-            padding: 20px;
-            margin-top: 40px;
-            font-size: 1.1em;
-        }
-        
-        .info-section {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        
-        .info-section h3 {
             font-size: 1.5em;
             margin-bottom: 15px;
             color: #2c3e50;
         }
-        
-        .info-section p {
+
+        .menu-card p {
+            font-size: 1em;
+            color: #666;
+        }
+
+        .icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .content-section {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .content-section h3 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        .content-section p {
             font-size: 1.1em;
-            line-height: 1.8;
-            color: #555;
+            margin-bottom: 20px;
+            color: #444;
+        }
+
+        .content-section ul {
+            margin-left: 25px;
+            margin-bottom: 20px;
+        }
+
+        .content-section li {
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 40px;
+        }
+
+        .footer-links {
+            margin-bottom: 20px;
+        }
+
+        .footer-links a {
+            color: #bdc3c7;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .copyright {
+            font-size: 0.9em;
+            color: #7f8c8d;
         }
     </style>
 </head>
 <body>
     <header>
         <h1>🏥 Senior Health Care</h1>
-        <p style="font-size: 1.2em;">A care support system for Parkinson’s, Alzheimer’s, and dementia patients</p>
+        <p style="font-size: 1.2em;">Compassionate care support for neurodegenerative conditions</p>
     </header>
-    
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="symptom-log.html">Symptom Log</a>
+        <a href="about.html">About Us</a>
+        <a href="contact.html">Contact</a>
+    </nav>
+
     <div class="container">
+        <section class="welcome-section">
+            <h2>Welcome to Senior Health Care</h2>
+            <p>We provide specialized tools and information for caregivers managing Parkinson’s, Alzheimer’s, and dementia. Our platform is designed to help you track symptoms, manage medications, and stay informed about the latest care practices.</p>
+        </section>
+
         <div class="menu-grid">
-            <a href="symptom-log.html" class="menu-card" style="text-decoration: none;">
+            <a href="symptom-log.html" class="menu-card">
                 <div class="icon">📝</div>
                 <h2>Symptom Log</h2>
-                <p>Record and track daily symptoms</p>
+                <p>Record and track daily symptoms with visual trend analysis</p>
             </a>
-            
-            <div class="menu-card" onclick="alert('Opening the Medication Reminder page')">
+
+            <div class="menu-card" onclick="alert('Medication Reminder system coming soon!')">
                 <div class="icon">💊</div>
                 <h2>Medication Reminder</h2>
-                <p>Get notified when it is time to take medicine</p>
-            </div>
-            
-            <div class="menu-card" onclick="alert('Opening the Hospital Appointment page')">
-                <div class="icon">🏥</div>
-                <h2>Hospital Appointments</h2>
-                <p>Manage clinic and hospital visits</p>
-            </div>
-            
-            <div class="menu-card" onclick="alert('Opening the Exercise Management page')">
-                <div class="icon">🚶</div>
-                <h2>Exercise Management</h2>
-                <p>Check and follow rehabilitation exercises</p>
-            </div>
-            
-            <div class="menu-card" onclick="alert('Opening the Health Information page')">
-                <div class="icon">ℹ️</div>
-                <h2>Health Information</h2>
-                <p>Learn about conditions and practical care tips</p>
+                <p>Set up alerts to ensure medication is taken on schedule</p>
             </div>
 
-            <div class="menu-card" onclick="alert('Opening the Emergency Contacts page')">
-                <div class="icon">☎️</div>
-                <h2>Emergemcy Contacts</h2>
-                <p>Save important emergemcy contact numbers</p>
+            <div class="menu-card" onclick="alert('Hospital Appointment tracker coming soon!')">
+                <div class="icon">🏥</div>
+                <h2>Hospital Visits</h2>
+                <p>Keep track of upcoming appointments and medical history</p>
             </div>
         </div>
-        
-        <div class="info-section">
-            <h3>📌 Important Notes</h3>
-            <p>• Do not miss regular hospital visits<br>
-               • Take medicine on time<br>
-               • Inform your doctor if symptoms change<br>
-               • Maintain a calm and comfortable environment</p>
+
+        <section class="content-section">
+            <h3>Managing Parkinson's and Dementia</h3>
+            <p>Caring for a loved one with Parkinson’s or dementia requires a holistic approach that combines medical treatment, physical activity, and mental support. Understanding the daily fluctuations in symptoms can help caregivers and doctors make informed decisions about care plans.</p>
+
+            <p>Key areas of focus for daily care:</p>
+            <ul>
+                <li><strong>Consistent Routine:</strong> Maintaining a regular schedule for meals, exercise, and sleep can reduce anxiety and confusion.</li>
+                <li><strong>Physical Activity:</strong> Light exercises, such as walking or stretching, help maintain mobility and balance.</li>
+                <li><strong>Effective Communication:</strong> Use simple, direct sentences and maintain a calm tone to improve understanding.</li>
+                <li><strong>Safety First:</strong> Ensure the living environment is free of hazards to prevent falls and accidents.</li>
+            </ul>
+
+            <h3>The Importance of Symptom Tracking</h3>
+            <p>Neurodegenerative diseases often progress slowly and symptoms can vary significantly from day to day. By using our <strong>Symptom Log</strong>, you can capture these nuances and provide a comprehensive data set to your medical team. This helps in identifying patterns, such as the effectiveness of certain medications at specific times of the day.</p>
+        </section>
+
+        <div class="content-section">
+            <h3>📌 Important Daily Reminders</h3>
+            <p>• Never skip prescribed medication without consulting a doctor.<br>
+               • Encourage social interaction to maintain cognitive health.<br>
+               • Monitor hydration and nutrition carefully.<br>
+               • Take time for your own self-care as a caregiver.</p>
         </div>
     </div>
-    
+
     <footer>
-        <p>© 2026 Senior Health Care System | Contact your family anytime you need support</p>
+        <div class="footer-links">
+            <a href="index.html">Home</a> |
+            <a href="about.html">About Us</a> |
+            <a href="contact.html">Contact Us</a> |
+            <a href="privacy.html">Privacy Policy</a>
+        </div>
+        <p class="copyright">© 2026 Senior Health Care System | Dedicated to providing support for families in need.</p>
+
     </footer>
 </body>
 </html>
