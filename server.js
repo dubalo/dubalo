@@ -40,7 +40,59 @@ db.exec(`
     date_added TEXT NOT NULL DEFAULT (date('now')),
     created_at TEXT NOT NULL DEFAULT (datetime('now'))
   );
+
+  CREATE TABLE IF NOT EXISTS clinical_history (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    visit_date TEXT NOT NULL,
+    doctor_name TEXT NOT NULL,
+    notes TEXT,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
 `);
+
+// ... (other endpoints) ...
+
+// API endpoints for clinical history
+app.post('/api/history', (req, res) => {
+  try {
+    const { visitDate, doctorName, notes } = req.body;
+    if (!visitDate || !doctorName) {
+      return res.status(400).json({ error: 'Visit date and doctor name are required.' });
+    }
+
+    const insert = db.prepare(`
+      INSERT INTO clinical_history (visit_date, doctor_name, notes)
+      VALUES (?, ?, ?)
+    `);
+
+    const result = insert.run(visitDate, doctorName, notes || '');
+    res.status(201).json({ id: result.lastInsertRowid, message: 'Record added.' });
+  } catch (error) {
+    console.error('Error saving history:', error);
+    res.status(500).json({ error: 'Internal server error.' });
+  }
+});
+
+app.get('/api/history', (req, res) => {
+  try {
+    const rows = db.prepare('SELECT * FROM clinical_history ORDER BY visit_date DESC').all();
+    res.json(rows);
+  } catch (error) {
+    console.error('Error fetching history:', error);
+    res.status(500).json({ error: 'Internal server error.' });
+  }
+});
+
+app.delete('/api/history/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    db.prepare('DELETE FROM clinical_history WHERE id = ?').run(id);
+    res.json({ message: 'Record deleted.' });
+  } catch (error) {
+    console.error('Error deleting history:', error);
+    res.status(500).json({ error: 'Internal server error.' });
+  }
+});
 
 // API endpoint to save a symptom record
 app.post('/api/symptoms', (req, res) => {
