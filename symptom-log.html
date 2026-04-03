@@ -18,8 +18,47 @@
         })(window, document, "clarity", "script", "voxar2e7ex");
     </script>
     <meta charset="UTF-8">
+    
+    <!-- Primary Meta Tags -->
+    <title>Daily Symptom Log - Track Parkinson's Tremors & Mobility</title>
+    <meta name="title" content="Daily Symptom Log - Track Parkinson's Tremors & Mobility">
+    <meta name="description" content="Record daily symptoms including tremor, rigidity, bradykinesia, and instability. Visualize health trends with our interactive graph for better doctor consultations.">
+    <meta name="keywords" content="Symptom Log, Parkinson's Tracker, Health Record, Tremor Graph, Rigidity Tracking, Medical Diary">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://www.neurotrack.cc/symptom-log.html">
+
+    <!-- Open Graph / Facebook / Naver -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.neurotrack.cc/symptom-log.html">
+    <meta property="og:title" content="Daily Symptom Log - Track Parkinson's Tremors & Mobility">
+    <meta property="og:description" content="Record daily symptoms including tremor, rigidity, bradykinesia, and instability. Visualize health trends with our interactive graph.">
+    <meta property="og:image" content="https://www.neurotrack.cc/favicon.ico">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://www.neurotrack.cc/symptom-log.html">
+    <meta property="twitter:title" content="Daily Symptom Log - Track Parkinson's Tremors & Mobility">
+    <meta property="twitter:description" content="Record daily symptoms including tremor, rigidity, bradykinesia, and instability. Visualize health trends with our interactive graph.">
+    <meta property="twitter:image" content="https://www.neurotrack.cc/favicon.ico">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "MedicalWebPage",
+      "name": "Daily Symptom Log",
+      "description": "A tool for tracking daily symptoms of neurodegenerative diseases.",
+      "url": "https://www.neurotrack.cc/symptom-log.html",
+      "audience": {
+        "@type": "MedicalAudience",
+        "audienceType": "Caregivers"
+      }
+    }
+    </script>
+
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏥</text></svg>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Symptom Log - Senior Health Care</title>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3854467893999183"
      crossorigin="anonymous"></script>
     <style>
@@ -291,11 +330,12 @@
     <nav>
         <a href="index.html">Home</a>
         <a href="symptom-log.html">Symptom Log</a>
+        <a href="medication-safety.html">Medication Safety</a>
         <a href="about.html">About Us</a>
         <a href="contact.html">Contact</a>
     </nav>
 
-    <div class="container">
+    <main class="container">
         <form class="card" onsubmit="handleSubmit(event)">
             <h2>Daily Symptom Record</h2>
 
@@ -377,7 +417,7 @@
             </div>
             <p class="empty-chart" id="emptyChart"></p>
         </section>
-    </div>
+    </main>
 
     <footer>
         <div class="footer-links">
@@ -550,6 +590,8 @@
             });
         }
 
+        const API_BASE_URL = 'https://neurotrack-24212547109.us-central1.run.app';
+
         async function handleSubmit(event) {
             event.preventDefault();
 
@@ -572,13 +614,13 @@
 
                 // 3. Optional: Try saving to local API if server is running
                 try {
-                    await fetch('/api/symptoms', {
+                    await fetch(`${API_BASE_URL}/api/symptoms`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)
                     });
                 } catch (e) {
-                    console.log('Local server not available, data saved to localStorage only.');
+                    console.log('API server not available, data saved to localStorage only.');
                 }
 
                 saveStatus.textContent = 'Record saved successfully!';
@@ -591,15 +633,15 @@
 
         async function loadChartData() {
             try {
-                // Try fetching from local API first
+                // Try fetching from API first
                 let records = [];
                 try {
-                    const response = await fetch('/api/symptoms');
+                    const response = await fetch(`${API_BASE_URL}/api/symptoms`);
                     if (response.ok) {
                         records = await response.json();
                     }
                 } catch (e) {
-                    console.log('Local server not available, using localStorage.');
+                    console.log('API server not available, using localStorage.');
                 }
 
                 // Merge with localStorage data and deduplicate by date (simplified)

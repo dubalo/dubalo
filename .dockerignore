@@ -1,0 +1,7 @@
+node_modules
+npm-debug.log
+.git
+.idx
+.vscode
+*.db
+firebase-debug.log
