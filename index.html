@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q8WLFJ497M"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q8WLFJ497M"></script>clou
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
@@ -132,6 +132,7 @@
         <a href="clinical-history.html">Clinical History</a>
         <a href="about.html">About Us</a>
         <a href="contact.html">Contact</a>
+        <span id="authNav"></span>
     </nav>
 
     <main class="container">
@@ -200,5 +201,22 @@
         </div>
         <p class="copyright">© 2026 NeuroTrack System | Grounded in Clinical Support for Families.</p>
     </footer>
+
+    <script>
+        const API_BASE_URL = 'https://neurotrack-24212547109.us-central1.run.app';
+        const authNav = document.getElementById('authNav');
+
+        fetch(`${API_BASE_URL}/api/auth/me`, { credentials: 'include' })
+            .then((response) => {
+                if (response.ok) {
+                    authNav.innerHTML = '<a href="account.html">Account</a>';
+                } else {
+                    authNav.innerHTML = '<a href="login.html">Log In</a><a href="signup.html">Sign Up</a>';
+                }
+            })
+            .catch(() => {
+                authNav.innerHTML = '<a href="login.html">Log In</a><a href="signup.html">Sign Up</a>';
+            });
+    </script>
 </body>
 </html>

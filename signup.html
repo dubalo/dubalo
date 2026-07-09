@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - NeuroTrack</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏥</text></svg>">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5; color: #333; line-height: 1.6; }
+        header { background-color: #2c3e50; color: white; padding: 40px 20px; text-align: center; }
+        header h1 { font-size: 2.8em; margin-bottom: 10px; }
+        nav { background: #34495e; padding: 10px 0; text-align: center; position: sticky; top: 0; z-index: 1000; }
+        nav a { color: white; text-decoration: none; margin: 0 15px; font-weight: bold; font-size: 1.1em; }
+        nav a:hover { color: #3498db; }
+        .container { max-width: 420px; margin: 50px auto; padding: 0 20px; }
+        .card { background: white; border-radius: 10px; padding: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .card h2 { color: #2c3e50; margin-bottom: 20px; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        .field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
+        label { font-weight: bold; color: #2c3e50; }
+        input { border: 1px solid #ccc; border-radius: 8px; padding: 12px; font-size: 1rem; width: 100%; }
+        .hint { font-size: 0.8em; color: #7f8c8d; }
+        button { border: none; border-radius: 8px; padding: 12px 24px; cursor: pointer; font-size: 1rem; background-color: #3498db; color: white; font-weight: bold; transition: background 0.3s; width: 100%; }
+        button:hover { background-color: #2980b9; }
+        button:disabled { background-color: #95a5a6; cursor: not-allowed; }
+        .switch-link { text-align: center; margin-top: 15px; }
+        .switch-link a { color: #3498db; text-decoration: none; font-weight: bold; }
+        #formStatus { text-align: center; margin-top: 10px; font-weight: bold; }
+        footer { background-color: #2c3e50; color: white; text-align: center; padding: 40px 20px; margin-top: 40px; }
+        .footer-links { margin-bottom: 20px; }
+        .footer-links a { color: #bdc3c7; text-decoration: none; margin: 0 10px; }
+        .footer-links a:hover { color: white; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🏥 NeuroTrack</h1>
+        <p style="font-size: 1.2em;">Create your account</p>
+    </header>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="login.html">Log In</a>
+        <a href="signup.html">Sign Up</a>
+    </nav>
+
+    <main class="container">
+        <section class="card">
+            <h2>Sign Up</h2>
+            <form id="signupForm">
+                <div class="field">
+                    <label for="name">Your Name</label>
+                    <input type="text" id="name" required autocomplete="name">
+                </div>
+                <div class="field">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required autocomplete="email">
+                </div>
+                <div class="field">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required minlength="8" autocomplete="new-password">
+                    <span class="hint">At least 8 characters.</span>
+                </div>
+                <div class="field">
+                    <label for="patientName">Record Name (optional)</label>
+                    <input type="text" id="patientName" placeholder="e.g. Dad's Health Record">
+                    <span class="hint">This is the shared record others can join with a code. Leave blank to use "Your Name's Records".</span>
+                </div>
+                <button type="submit" id="submitBtn">Sign Up</button>
+                <p id="formStatus"></p>
+            </form>
+            <p class="switch-link">Already have an account? <a href="login.html">Log in</a></p>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="index.html">Home</a> |
+            <a href="about.html">About Us</a> |
+            <a href="contact.html">Contact Us</a> |
+            <a href="privacy.html">Privacy Policy</a>
+        </div>
+        <p class="copyright">© 2026 NeuroTrack System | Dedicated Clinical Support.</p>
+    </footer>
+
+    <script>
+        const API_BASE_URL = 'https://neurotrack-24212547109.us-central1.run.app';
+        const form = document.getElementById('signupForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const formStatus = document.getElementById('formStatus');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            submitBtn.disabled = true;
+            formStatus.style.color = '#333';
+            formStatus.textContent = 'Creating account…';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/auth/signup`, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: document.getElementById('name').value,
+                        email: document.getElementById('email').value,
+                        password: document.getElementById('password').value,
+                        patientName: document.getElementById('patientName').value || undefined
+                    })
+                });
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Sign up failed.');
+                }
+
+                window.location.href = 'account.html?welcome=1';
+            } catch (err) {
+                formStatus.style.color = '#e74c3c';
+                formStatus.textContent = err.message || 'Something went wrong. Please try again.';
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

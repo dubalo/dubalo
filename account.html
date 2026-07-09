@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account - NeuroTrack</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏥</text></svg>">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5; color: #333; line-height: 1.6; }
+        header { background-color: #2c3e50; color: white; padding: 40px 20px; text-align: center; }
+        header h1 { font-size: 2.8em; margin-bottom: 10px; }
+        nav { background: #34495e; padding: 10px 0; text-align: center; position: sticky; top: 0; z-index: 1000; }
+        nav a { color: white; text-decoration: none; margin: 0 15px; font-weight: bold; font-size: 1.1em; }
+        nav a:hover { color: #3498db; }
+        .container { max-width: 700px; margin: 30px auto; padding: 0 20px; display: flex; flex-direction: column; gap: 25px; }
+        .card { background: white; border-radius: 10px; padding: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .card h2 { color: #2c3e50; margin-bottom: 20px; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        .welcome-banner { background: #eafaf1; border-left: 5px solid #27ae60; padding: 15px 20px; border-radius: 5px; margin-bottom: 5px; }
+        .share-code-box { background: #ecf0f1; border-radius: 8px; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-top: 10px; }
+        .share-code { font-size: 1.6em; font-weight: bold; letter-spacing: 2px; color: #2c3e50; }
+        .patient-list { list-style: none; margin-top: 10px; }
+        .patient-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #eee; }
+        .patient-item:last-child { border-bottom: none; }
+        .patient-item .role-tag { font-size: 0.75em; background: #eaf3fb; color: #3498db; padding: 3px 8px; border-radius: 10px; margin-left: 8px; font-weight: bold; }
+        .patient-item .role-tag.owner { background: #fdf2e3; color: #e67e22; }
+        button, .btn { border: none; border-radius: 8px; padding: 10px 18px; cursor: pointer; font-size: 0.95rem; background-color: #3498db; color: white; font-weight: bold; transition: background 0.3s; }
+        button:hover, .btn:hover { background-color: #2980b9; }
+        button:disabled { background-color: #95a5a6; cursor: not-allowed; }
+        .btn-outline { background: none; color: #3498db; border: 2px solid #3498db; padding: 8px 16px; }
+        .btn-outline:hover { background: #3498db; color: white; }
+        .btn-danger { background: #e74c3c; }
+        .btn-danger:hover { background: #c0392b; }
+        .field { display: flex; gap: 10px; margin-top: 10px; }
+        .field input { flex: 1; border: 1px solid #ccc; border-radius: 8px; padding: 10px; font-size: 1rem; text-transform: uppercase; }
+        #joinStatus, #userInfo { margin-top: 10px; font-weight: bold; }
+        footer { background-color: #2c3e50; color: white; text-align: center; padding: 40px 20px; margin-top: 40px; }
+        .footer-links { margin-bottom: 20px; }
+        .footer-links a { color: #bdc3c7; text-decoration: none; margin: 0 10px; }
+        .footer-links a:hover { color: white; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🏥 My Account</h1>
+        <p style="font-size: 1.2em;">Manage your login and shared records</p>
+    </header>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="symptom-log.html">Symptom Log</a>
+        <a href="medication-safety.html">Medication Safety</a>
+        <a href="clinical-history.html">Clinical History</a>
+        <a href="account.html">Account</a>
+    </nav>
+
+    <main class="container" id="mainContent" style="display: none;">
+        <div class="welcome-banner" id="welcomeBanner" style="display: none;">
+            Account created! Share the code below with a caregiver or doctor so they can see the same records.
+        </div>
+
+        <section class="card">
+            <h2>Signed in as</h2>
+            <p id="userInfo"></p>
+            <button id="logoutBtn" class="btn-danger" style="margin-top: 15px;">Log Out</button>
+        </section>
+
+        <section class="card">
+            <h2>Active Record</h2>
+            <p>You are currently viewing and editing: <strong id="activePatientName"></strong></p>
+            <p style="margin-top: 5px; color: #555;">Anyone with this code can view and add to this record:</p>
+            <div class="share-code-box">
+                <span class="share-code" id="activeShareCode"></span>
+                <button id="copyCodeBtn" class="btn-outline">Copy</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Your Records</h2>
+            <p style="color: #555;">Records you own or have joined. Select one to make it active.</p>
+            <ul class="patient-list" id="patientList"></ul>
+
+            <h2 style="margin-top: 25px;">Join a Shared Record</h2>
+            <p style="color: #555;">Enter a share code someone gave you to view their log.</p>
+            <div class="field">
+                <input type="text" id="shareCodeInput" placeholder="e.g. A1B2C3D4" maxlength="16">
+                <button id="joinBtn">Join</button>
+            </div>
+            <p id="joinStatus"></p>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="index.html">Home</a> |
+            <a href="about.html">About Us</a> |
+            <a href="contact.html">Contact Us</a> |
+            <a href="privacy.html">Privacy Policy</a>
+        </div>
+        <p class="copyright">© 2026 NeuroTrack System | Dedicated Clinical Support.</p>
+    </footer>
+
+    <script>
+        const API_BASE_URL = 'https://neurotrack-24212547109.us-central1.run.app';
+        const mainContent = document.getElementById('mainContent');
+        const userInfo = document.getElementById('userInfo');
+        const activePatientName = document.getElementById('activePatientName');
+        const activeShareCode = document.getElementById('activeShareCode');
+        const patientList = document.getElementById('patientList');
+        const joinStatus = document.getElementById('joinStatus');
+
+        async function loadAccount() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/auth/me`, { credentials: 'include' });
+                if (!response.ok) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                const data = await response.json();
+                renderAccount(data);
+            } catch (err) {
+                window.location.href = 'login.html';
+            }
+        }
+
+        function renderAccount(data) {
+            mainContent.style.display = 'flex';
+            userInfo.textContent = `${data.user.name} (${data.user.email})`;
+            activePatientName.textContent = data.activePatient.name;
+            activeShareCode.textContent = data.activePatient.shareCode;
+
+            patientList.innerHTML = data.patients.map((p) => `
+                <li class="patient-item">
+                    <span>${escapeHtml(p.name)} <span class="role-tag ${p.role === 'owner' ? 'owner' : ''}">${p.role}</span></span>
+                    ${p.id === data.activePatient.id
+                        ? '<span style="color:#27ae60; font-weight:bold;">Active</span>'
+                        : `<button class="btn-outline switch-btn" data-id="${p.id}">Switch</button>`}
+                </li>
+            `).join('');
+
+            document.querySelectorAll('.switch-btn').forEach((btn) => {
+                btn.addEventListener('click', () => switchPatient(btn.dataset.id));
+            });
+
+            if (new URLSearchParams(window.location.search).get('welcome') === '1') {
+                document.getElementById('welcomeBanner').style.display = 'block';
+            }
+        }
+
+        async function switchPatient(patientId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/patients/select`, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ patientId: Number(patientId) })
+                });
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.error);
+                }
+                await loadAccount();
+            } catch (err) {
+                alert(err.message || 'Could not switch records.');
+            }
+        }
+
+        document.getElementById('joinBtn').addEventListener('click', async () => {
+            const shareCode = document.getElementById('shareCodeInput').value.trim();
+            if (!shareCode) return;
+
+            joinStatus.style.color = '#333';
+            joinStatus.textContent = 'Joining…';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/patients/join`, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ shareCode })
+                });
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.error || 'Could not join that record.');
+                }
+                joinStatus.style.color = '#27ae60';
+                joinStatus.textContent = `Joined "${data.activePatient.name}".`;
+                document.getElementById('shareCodeInput').value = '';
+                await loadAccount();
+            } catch (err) {
+                joinStatus.style.color = '#e74c3c';
+                joinStatus.textContent = err.message;
+            }
+        });
+
+        document.getElementById('copyCodeBtn').addEventListener('click', () => {
+            navigator.clipboard.writeText(activeShareCode.textContent).then(() => {
+                const btn = document.getElementById('copyCodeBtn');
+                const original = btn.textContent;
+                btn.textContent = 'Copied!';
+                setTimeout(() => { btn.textContent = original; }, 1500);
+            });
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await fetch(`${API_BASE_URL}/api/auth/logout`, { method: 'POST', credentials: 'include' });
+            window.location.href = 'login.html';
+        });
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        loadAccount();
+    </script>
+</body>
+</html>

@@ -88,9 +88,12 @@
         <a href="symptom-log.html">Symptom Log</a>
         <a href="medication-safety.html">Medication Safety</a>
         <a href="clinical-history.html">Clinical History</a>
+        <a href="account.html">Account</a>
         <a href="about.html">About Us</a>
         <a href="contact.html">Contact</a>
     </nav>
+
+    <p id="activeRecordBanner" style="text-align:center; background:#eaf3fb; color:#2c3e50; padding:10px; font-size:0.9em; display:none;"></p>
 
     <main class="container">
         <section class="safety-tips">
@@ -164,12 +167,34 @@
         const saveStatus = document.getElementById('saveStatus');
         const API_BASE_URL = 'https://neurotrack-24212547109.us-central1.run.app';
 
-        // Load medications on startup
-        window.addEventListener('DOMContentLoaded', loadMedications);
+        async function requireAuth() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/auth/me`, { credentials: 'include' });
+                if (!response.ok) {
+                    window.location.href = 'login.html';
+                    return false;
+                }
+                const data = await response.json();
+                const banner = document.getElementById('activeRecordBanner');
+                banner.textContent = `Viewing: ${data.activePatient.name} (${data.activePatient.role}) — switch or share in Account`;
+                banner.style.display = 'block';
+                return true;
+            } catch (err) {
+                window.location.href = 'login.html';
+                return false;
+            }
+        }
+
+        // Load medications on startup, after confirming the user is logged in
+        window.addEventListener('DOMContentLoaded', async () => {
+            const authed = await requireAuth();
+            if (!authed) return;
+            await loadMedications();
+        });
 
         medForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const newMed = {
                 name: document.getElementById('medName').value,
                 dosage: document.getElementById('dosage').value,
@@ -186,53 +211,43 @@
                 saveStatus.textContent = "Saving medication...";
                 saveStatus.style.color = "blue";
 
-                // 1. Save to localStorage (fallback)
-                const meds = JSON.parse(localStorage.getItem('medications') || '[]');
-                const localMed = { ...med, id: Date.now(), date_added: new Date().toLocaleDateString() };
-                meds.push(localMed);
-                localStorage.setItem('medications', JSON.stringify(meds));
+                const response = await fetch(`${API_BASE_URL}/api/medications`, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(med)
+                });
 
-                // 2. Save to API
-                try {
-                    const response = await fetch(`${API_BASE_URL}/api/medications`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(med)
-                    });
-                    if (!response.ok) throw new Error('API failed');
-                } catch (apiError) {
-                    console.log('API server not available, saved to localStorage only.');
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.error || 'Failed to save medication.');
                 }
-                
+
                 saveStatus.textContent = "Medication added successfully!";
                 saveStatus.style.color = "green";
-                
+
                 medForm.reset();
                 await loadMedications();
-                
+
                 setTimeout(() => { saveStatus.textContent = ""; }, 3000);
             } catch (error) {
-                saveStatus.textContent = "Error saving medication.";
+                saveStatus.textContent = error.message || "Error saving medication.";
                 saveStatus.style.color = "red";
             }
         }
 
         async function loadMedications() {
             try {
-                let records = [];
-                try {
-                    const response = await fetch(`${API_BASE_URL}/api/medications`);
-                    if (response.ok) {
-                        records = await response.json();
+                const response = await fetch(`${API_BASE_URL}/api/medications`, { credentials: 'include' });
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        window.location.href = 'login.html';
+                        return;
                     }
-                } catch (e) {
-                    console.log('API server not available, using localStorage.');
+                    throw new Error('Failed to load medications.');
                 }
-
-                const localData = JSON.parse(localStorage.getItem('medications') || '[]');
-                const displayData = records.length > 0 ? records : localData;
-
-                renderMedications(displayData);
+                const records = await response.json();
+                renderMedications(records);
             } catch (error) {
                 console.error('Failed to load medications:', error);
             }
@@ -261,18 +276,7 @@
 
         async function deleteMedication(id) {
             if (confirm('Are you sure you want to delete this medication?')) {
-                // 1. Delete from localStorage
-                let meds = JSON.parse(localStorage.getItem('medications') || '[]');
-                meds = meds.filter(m => m.id !== id);
-                localStorage.setItem('medications', JSON.stringify(meds));
-
-                // 2. Delete from API
-                try {
-                    await fetch(`${API_BASE_URL}/api/medications/${id}`, { method: 'DELETE' });
-                } catch (e) {
-                    console.log('API server not available for delete.');
-                }
-
+                await fetch(`${API_BASE_URL}/api/medications/${id}`, { method: 'DELETE', credentials: 'include' });
                 await loadMedications();
             }
         }
